@@ -38,8 +38,9 @@ This repository contains my personal learning notes.
    7. >> 使用自己的语言和理解描述sac算法
 
 
-回忆soft-actor-critic 算法流程：
-SAC是off-policy RL，replay buffer里的数据来自旧策略，（以前一直以为off-policy 就是当前要更新的动作策略与生成训练数据的使用的策略不是同一个策略，在完成这个作业时才发现，SAC里actor网络更新时使用动是当前策略中采样的，但是状态来自replay buffer）
+回忆soft-actor-critic 算法流程：  
+SAC是off-policy RL，replay buffer里的数据来自旧策略，（以前一直以为off-policy 就是当前要更新的动作策略与生成训练数据的使用的策略不是同一个策略，  
+在完成这个作业时才发现，SAC里actor网络更新时使用动是当前策略中采样的，但是状态来自replay buffer）
 1. 运行当前策略，生成一批数据加入到replay buffer里 （状态，动作，收益，下一个状态，轨迹是否结束）
 2. 从replay buffer中采样一批数据D，在(当前策略+过去策略)中随机采样
 3. critic网络训练：
