@@ -98,9 +98,11 @@ SAC是off-policy RL，replay buffer里的数据来自旧策略，（以前一直
 
 SAC的论文还没看  
 
-今日完成：
- cs224r lecture9 收尾，lecture10补全，这两节课换了讲师，课堂内容有点散，吸收率低了很多，没有想记录的知识点
- 看了篇4D World Model论文，没看完，因为涉及到3DGS的内容，不懂，让chatgpt给讲了下，发现挺有趣的
+今日完成：  
+ - cs224r lecture9 收尾，lecture10补全，
+    - 这两节课换了讲师，课堂内容有点散，吸收率低了很多，没有想记录的知识点
+ - 看了篇4D World Model论文，没看完，因为涉及到3DGS的内容，不懂，
+    - 让chatgpt给讲了下，竟然没有很枯燥，比这篇论文有趣
 
 
 NeoVerse: Enhancing 4D World Model with in-the-wild Monocular Videos
