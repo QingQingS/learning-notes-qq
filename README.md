@@ -96,7 +96,8 @@ SAC是off-policy RL，replay buffer里的数据来自旧策略，（以前一直
 - Bellman target 是 Monte Carlo + bootstrapping 的无偏回归
 - actorloss 里使用解析熵（Gaussian），直接用 distribution，不依赖具体 sampled action，是“对分布的期望”；而 target_Q_value 需要的是“期望里的一个样本”，手动进行负对数似然计算 ，而不是解析熵
 
-SAC的论文还没看
+SAC的论文还没看  
+
 今日完成：
  cs224r lecture9 收尾，lecture10补全，这两节课换了讲师，课堂内容有点散，吸收率低了很多，没有想记录的知识点
  看了篇4D World Model论文，没看完，因为涉及到3DGS的内容，不懂，让chatgpt给讲了下，发现挺有趣的
