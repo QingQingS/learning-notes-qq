@@ -148,3 +148,17 @@ Flow-GRPO
     - 看train_wan2_1.py x_t-1部分怎么跟论文公式对不上？？
     - 仔细核对了，一样的，做了同类项提取
     - x_t+Δt​∣x_t​∼N(μ(x_t​,t)Δt,(σ_t)**2*​Δt*I)--> 概率密度是多维高斯分布
+
+# 20260102
+Flow-GRPO 代码部分
+- 每个prompt生成m个样本轨迹，每个轨迹包含timesteps(比如20步)个中间状态/动作，每个轨迹各个时刻都是使用该轨迹最终解码的视频来计算reward，进而得到优势函数值，一个轨迹中的每个动作优势函数值相同
+- 在单步grpo更新时，优势函数是按照timestep来取值的，但是reward确实是针对一个轨迹（video）来计算的，没找到在哪里对优势函数处理成timestep维度的？
+- 从后面mask部分的代码注释，似乎每个timestep的优势函数值还不一样？哪里没对齐呢？
+- 对数似然 和 kl？ 应该每个时刻都有一个对应的计算值
+- 找到了，在这行代码中发生了广播samples["rewards"]["avg"] = samples["rewards"]["avg"].unsqueeze(-1) - config.sample.kl_reward*samples["kl"]  
+
+
+SuperFlow 论文（只看了个开头）
+- 针对两个问题：  
+    1. 每个prompt都对应m个样本轨迹，忽略不同prompt样本方差，比如有的prompt生成的m个样本，reward都一样，方差小，梯度几乎为0
+    2. 奖励是轨迹层级的，而不是timestep层级的
