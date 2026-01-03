@@ -166,7 +166,7 @@ SuperFlow 论文（只看了个开头）
 # 20260103
 Flow-GRPO算法流程回忆：  
 
-![算法步骤](/Users/sunqingqing/learning-notes-qq/微信图片_20260103220444_23_22.jpg)  
+![算法步骤](./微信图片_20260103220444_23_22.jpg)  
 
 Flow-GRPO 
 - 论文实验部分
