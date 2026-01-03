@@ -162,3 +162,32 @@ SuperFlow 论文（只看了个开头）
 - 针对两个问题：  
     1. 每个prompt都对应m个样本轨迹，忽略不同prompt样本方差，比如有的prompt生成的m个样本，reward都一样，方差小，梯度几乎为0
     2. 奖励是轨迹层级的，而不是timestep层级的
+
+# 20260103
+Flow-GRPO算法流程回忆：
+![算法步骤](/Users/sunqingqing/learning-notes-qq/微信图片_20260103220444_23_22.jpg)
+Flow-GRPO 
+- 论文实验部分
+    - kl-rewards 对reward hacking的影响
+    - train-timesteps直接决定训练的速度，太少会影响模型的效果，最佳timesteps（一个轨迹的长度）
+    - 噪音level控制了探索空间和生成多样性，过大的噪声同样影响生成效果
+    - groupsize对效果的影响，太小优势函数不准确（方差大）
+- 应用到视频领域面临的问题
+ - 视频一致性，物理规律如何评估
+ - reward hacking因素更多
+ - 训练规模更大，如何更高效的训练
+
+SuperFlow 论文
+ 1. 在 prompt 维度上，通过 KL-自适应遗忘的 Beta tracker，在线估计稳定的平均 reward 作为 baseline；
+ 2. 在时间维度上，根据噪声强度/时间步的重要性，将终态 reward 相对于 baseline 的偏差，重分配为各 denoising step 的 step-wise advantage  
+
+ - 对每个prompt维护一个KL自适应遗忘的reward均值估计
+ - 将最终状态reward相对于上述均值估计的偏差，根据噪声（时间步）幅度的权重函数，进行step-wise advantage分配
+
+CS224R lecture11 
+- model-based rl
+- dynamic model 训练 ，输入当前时刻状态动作，输出下一时刻状态
+- planning
+  - gradient-based planning
+  - Random Shooting
+  - Cross Entropy Method
