@@ -164,8 +164,10 @@ SuperFlow 论文（只看了个开头）
     2. 奖励是轨迹层级的，而不是timestep层级的
 
 # 20260103
-Flow-GRPO算法流程回忆：
-![算法步骤](/Users/sunqingqing/learning-notes-qq/微信图片_20260103220444_23_22.jpg)
+Flow-GRPO算法流程回忆：  
+
+![算法步骤](/Users/sunqingqing/learning-notes-qq/微信图片_20260103220444_23_22.jpg)  
+
 Flow-GRPO 
 - 论文实验部分
     - kl-rewards 对reward hacking的影响
