@@ -195,7 +195,8 @@ CS224R lecture11
   - Cross Entropy Method
 
 # 20260106
-DQN
+DQN  
+
 - off-policy
 - epsilon-greedy strategy
 - 问：在代码中如何实现argmax_a(q(s,a)),如何遍历全部的动作，找到让q(s,a)最大的a呢？
@@ -209,7 +210,8 @@ DQN
     - 运行taget_critic模型，输出的是所有动作的q，直接选择最大的那个q做为target
 - 先做的SAC的作业，里面也有double-Q，原来跟这里完全不是一回事啊
 
-AWAC
+AWAC  
+
 - offline RL
 - critic 部分跟DQN里的部分相似，target部分将求最大该成根据动作概率分布求q(s,a)的期望（比DQN中多了actor部分，可以输出动作分布）
 - actor网络是离散动作空间，输出logits，返回分布分布distributions.Categorical(logits=logits)
@@ -224,9 +226,10 @@ AWAC
     - loss = 优势函数 * 对数似然 （根据优势函数的权重来调整样本动作的概率），学习高Q的动作
 - critic网络的训练依赖的actor
 
-IQL(未完待续)
+IQL(未完待续)  
+
 - 对AWAC进行改造
 - actor不再参与critic网络学习
 - critic部分增加value-critic
 
-RMSNorm
+RMSNorm  
