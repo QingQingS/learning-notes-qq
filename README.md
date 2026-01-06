@@ -193,3 +193,40 @@ CS224R lecture11
   - gradient-based planning
   - Random Shooting
   - Cross Entropy Method
+
+# 20260106
+DQN
+- off-policy
+- epsilon-greedy strategy
+- 问：在代码中如何实现argmax_a(q(s,a)),如何遍历全部的动作，找到让q(s,a)最大的a呢？
+- 答：DQN适用离散场景，可以直接使用下标来表示动作
+- 作业代码中给出的critic网络输入只有状态，没有动作，输出是在所有动作上的q(s,a)
+- 每一千步更新一次target_critic
+- Double-DQN：
+    - 运行一次critic模型，选择q值最大的动作a下标，假设是k(第k个动作在critic模型下未来收益最大)
+    - 再运行一次target_critic模型，选择动作k的q值做为target
+- vs DQN
+    - 运行taget_critic模型，输出的是所有动作的q，直接选择最大的那个q做为target
+- 先做的SAC的作业，里面也有double-Q，原来跟这里完全不是一回事啊
+
+AWAC
+- offline RL
+- critic 部分跟DQN里的部分相似，target部分将求最大该成根据动作概率分布求q(s,a)的期望（比DQN中多了actor部分，可以输出动作分布）
+- actor网络是离散动作空间，输出logits，返回分布分布distributions.Categorical(logits=logits)
+- 离散动作空间，也就限定了所有可能的动作，actor网络输出的动作就不会有超出数据集外的动作出现，这里就不用考虑OOD如何处理的问题
+- 优势函数权重计算：
+    - actor网络输入当前状态s_t，输出动作分布
+    - critic网络输入当前状态s_t,输出所有动作的q(s_t,a)
+    - 过滤出样本动作a_t的q(s_t,a_t)
+    - 根据动作概率和q(s_t,a)，求value(s_t)，即所有动作的q(s_t,a)的期望
+    - 计算样本动作a_t的优势函数
+    - 根据动作分布计算样本动作a_t的对数似然
+    - loss = 优势函数 * 对数似然 （根据优势函数的权重来调整样本动作的概率），学习高Q的动作
+- critic网络的训练依赖的actor
+
+IQL(未完待续)
+- 对AWAC进行改造
+- actor不再参与critic网络学习
+- critic部分增加value-critic
+
+RMSNorm
