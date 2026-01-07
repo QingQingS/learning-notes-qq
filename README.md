@@ -230,6 +230,31 @@ IQL(未完待续)
 
 - 对AWAC进行改造
 - actor不再参与critic网络学习
-- critic部分增加value-critic
+- critic部分增加value-critic  
 
-RMSNorm  
+20260107  
+RMSNorm    
+- 对每个token向量进行归一化，这里是选择均方根而不L2 norm，
+- L2 norm是把向量映射成模长为1的向量，每个维度的取值会受到向量维度的影响，维度越大每个维度的值会越小，数值不稳定
+- RMSNorm是将向量映射到半径固定的球体表面，每个维度的取值与向量维度解耦，数值稳定
+- 用在attn的Q,K上，attn中Q、K 用于打分（score），对数值尺度极端敏感，进行RMSNorm后，不同token的Q,K向量尺度对齐
+- 进行RMSNorm后，把所有token向量缩放到 L2 范数 ≈ √d，每个 token 的 Q、K 的模长几乎相同，所有token向量都被映射到一个半径固定（≈√d）的高维球面附近
+
+ROPE  
+- 目的是两个位置的向量，通过各种绝对位置编码后的向量内积能表示成相对位置的函数
+- ...
+
+wan2.1 model    
+- 时间调制+block调制+self-attn模块调制+ffn模块调制，cross-attn没有调制，只负责条件引入，与时间无关（时间是噪声相关的，条件是噪声无关的，不管当前是高噪声还是低噪声，引入的条件都是一致的）
+- i2v是，图像条件token与文本条件token是拼接到一起送入cross-attn模块的，在这里把两个条件分开，各自独立进行cross-attn后，相加
+- ...
+
+flash-attn   
+- 通过减少I/O的次数，提高效率
+- 每次完成一个完整的局部操作（分块计算）
+- 通过online softmax来对齐全局计算结果
+- ...
+
+开了新坑，cs336的作业
+
+
