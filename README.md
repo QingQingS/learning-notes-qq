@@ -289,3 +289,52 @@ flash-attn
 
 
  截止到目前已经看了模仿学习、策略梯度、actor-critic、PPO、SAC、DQN、IQL、CQL、model-base rl有9个算法了，感觉能理解了一些，知道它们是什么、怎么做，知道相关的算法背景，知道自己知道什么，也隐约知道自己不知道什么，但是还缺一个Aha moment！预计还得进行几次深度思考才能把它们串起来
+
+ # 20260109
+ ## Pretraining Frame Preservation in Autoregressive Video Memory Compression
+ - 保留任一帧的高频细节
+ - 能将20s的视频压缩到5k tokens
+ - 训练了一个历史帧压缩编码器
+ - 利用这个编码器提取历史帧特征做为视频生成模型的条件
+ - 对历史帧进行随机mask，剩余的干净帧做为扩散模型重构的目标
+ - 历史编码器提取的历史帧做为条件，然后利用标准的flowmaching方式来进行任意历史帧重构
+
+# 20260110  
+
+今天主要复习flash attention  
+向Claude Sonnet 4.5进行傻瓜式提问  
+问题汇总（一字未改）  
+1. 在脚本中 cu_seqlens_q=torch.cat([q_lens.new_zeros([1]), q_lens]).cumsum(0, dtype=torch.int32).to(q.device, non_blocking=True) 这两行是在做什么？
+
+2. 在代码中 b, lq, lk, out_dtype = q.size(0), q.size(1), k.size(1), q.dtype，这里 lq = q.size(1)，batchsize 中每个样本的序列长度都是一样的 lq 是么？
+
+3. 在使用 flash_attention 时需要考虑什么？容易犯什么错误？
+
+4. 在代码的第 82，83 行 q = q.to(v.dtype), k = k.to(v.dtype)，这里的 q，k 还没有放到显存上么？是在调用 flash_attn_varlen_func 函数内将它们放置在显存里的么？
+
+5. 重新问一次，就是当前数据都在显存 HBM 上，在函数 flash_attn_varlen_func 中会逐块将它们搬运到 SRAM 中进行 kernel 计算是么？
+
+6. seqused_q 这个起什么作用？window_size 是做什么用的？
+
+7. flash2 和 flash3 的区别是什么？
+
+8. cu_seqlens_q 中 non_blocking 为什么只在这两个变量中有异步传输，异步传输的对象是谁？什么是异步传输，是块和块进行异步传输么？比如 q 的块 0 传输到 SRAM kernel 的块 0，q 的块 1 异步传输到 SRAM kernel 的块 1？
+
+9. window_size 在 flash 内部是如何实现的？
+
+10. 为什么 flash-atten3 速度更快，是因为 kernel 内部计算时使用 fp8 精度计算么？还有其他原因么？
+
+11. flash-attn 有什么缺点或不足？
+
+12. 作为算法工程师，而非 AI infra 岗，关于 flash-attention 必须要掌握的内容具体是哪些，如何检测是否已经高质量的掌握了？
+
+13. 前面提到，长序列（L > 2048）时显存爆炸，这里是只HBM爆炸还是SRAM爆炸
+
+14. scores = Q @ K.T  # [B, num_heads, L, L] ← 存储在 HBM！ 这句话中，在标准的attention计算中，Q和K的矩阵乘法不是在SRAM里进行的么？而SRAM的容量比HBM还要小，不应该是SRAM里先发生爆炸么
+
+15. 意思是在 Q @ K.T 计算时是分块计算的，每块计算完成就将部分的score结果传回HBM，所以在整个过程中只有HBM上是存放完整的score矩阵是么？
+
+16. 计算softmax的时候因为要全局信息，在标准attention中，要将scores全部读入SRAM么，不然的话，标准attention中没有online softmax策略，这里怎么处理呢
+
+17. 怎么记得前面讲的flash-attention2是两次扫描，flash-attention3是单次扫描
+    - 它确实说的2中是两次扫描，还不承认
